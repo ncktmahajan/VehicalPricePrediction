@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vehical Price Prediction</title>
+    <style>
+        /* General styling for the body */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff; /* White background */
+            color: #000000; /* Black text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Form container styling */
+        .form-container {
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            background-color: #ffffff; /* White background for form */
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            border: 1px solid #000000; /* Black border for sleek look */
+        }
+
+        /* Form title styling */
+        .form-container h2 {
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #000000; /* Black text for title */
+        }
+
+        /* Input, label, and select styling */
+        .form-container label {
+            font-size: 1em;
+            color: #333333;
+            margin-top: 10px;
+        }
+
+        .form-container input[type="text"],
+        .form-container input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 20px 0;
+            border: 1px solid #333333; /* Light black/gray border */
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: #f9f9f9; /* Light gray background for input */
+            color: #000000; /* Black text */
+            font-size: 1em;
+            outline: none;
+        }
+
+        /* Inline options container styling */
+        .inline-options {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0 20px;
+        }
+
+        .inline-options select {
+            width: 95%; /* Increased width to 32% */
+            padding: 12px;
+            border: 1px solid #333333;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            color: #000000;
+            font-size: 1em;
+            outline: none;
+        }
+
+        /* Submit button styling */
+        .form-container input[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background-color: #000000; /* Black background */
+            border: none;
+            border-radius: 5px;
+            color: #ffffff; /* White text */
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-container input[type="submit"]:hover {
+            background-color: #333333; /* Dark gray background on hover */
+        }
+
+        /* Result styling */
+        .result {
+            font-size: 1.5em;
+            color: #350000;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Vehical Price Prediction</h2>
+        <form action="/predict" method="post">
+            <label for="car_name">Vehical Name:</label>
+            <input type="text" name="car_name" placeholder="Enter car name" required
+                   value="{{ request.form['car_name'] if 'car_name' in request.form else '' }}">
+
+            <label for="year">Year:</label>
+            <input type="number" name="year" placeholder="Enter manufacturing year" required
+                   value="{{ request.form['year'] if 'year' in request.form else '' }}">
+
+            <label for="present_price">Present Price:</label>
+            <input type="number" step="0.01" name="present_price" placeholder="Current price of the car" required
+                   value="{{ request.form['present_price'] if 'present_price' in request.form else '' }}">
+
+            <label for="kms_driven">Kms Driven:</label>
+            <input type="number" name="kms_driven" placeholder="Total kilometers driven" required
+                   value="{{ request.form['kms_driven'] if 'kms_driven' in request.form else '' }}">
+
+            <!-- Inline Options for Fuel Type, Seller Type, and Transmission -->
+            <div class="inline-options">
+                <div>
+                    <label for="fuel_type">Fuel Type:</label>
+                    <select name="fuel_type" required>
+                        <option value="Petrol" {% if request.form['fuel_type'] == 'Petrol' %}selected{% endif %}>Petrol</option>
+                        <option value="Diesel" {% if request.form['fuel_type'] == 'Diesel' %}selected{% endif %}>Diesel</option>
+                        <option value="CNG" {% if request.form['fuel_type'] == 'CNG' %}selected{% endif %}>CNG</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="seller_type">Seller Type:</label>
+                    <select name="seller_type" required>
+                        <option value="Dealer" {% if request.form['seller_type'] == 'Dealer' %}selected{% endif %}>Dealer</option>
+                        <option value="Individual" {% if request.form['seller_type'] == 'Individual' %}selected{% endif %}>Individual</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="transmission">Transmission:</label>
+                    <select name="transmission" required>
+                        <option value="Manual" {% if request.form['transmission'] == 'Manual' %}selected{% endif %}>Manual</option>
+                        <option value="Automatic" {% if request.form['transmission'] == 'Automatic' %}selected{% endif %}>Automatic</option>
+                    </select>
+                </div>
+            </div>
+
+            <label for="owner">Owner:</label>
+            <input type="number" name="owner" placeholder="Number of previous owners" required
+                   value="{{ request.form['owner'] if 'owner' in request.form else '' }}">
+
+            <input type="submit" value="Predict">
+        </form>
+        {% if prediction_text %}
+        <div class="result">{{ prediction_text }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>
